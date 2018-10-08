@@ -1,5 +1,6 @@
+import java.util.concurrent.Callable;
 
-public class DBConnector implements Runnable{
+public class DBConnector implements Callable<String>{
 	public String user, pwd, dbName, serverName, host, port, conector;
 
 	public DBConnector(String user, String pwd, String dbName, String serverName, String host, String port,
@@ -41,13 +42,16 @@ public class DBConnector implements Runnable{
 		this.conector = conector;
 	}
 
-	public void makeRequest() {
-		System.out.println(this.host + "," + this.port + "/" + this.conector);
+	public String makeRequest() {
+		//System.out.println(this.host + "," + this.port + "/" + this.conector);
+		return this.host + "," + this.port + "/" + this.conector;
 	}
 
+
 	@Override
-	public void run() {
-		this.makeRequest();
+	public String call() throws Exception {
+		return this.makeRequest();
 	}
+
 	
 }

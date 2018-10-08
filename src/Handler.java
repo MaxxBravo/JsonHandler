@@ -1,3 +1,7 @@
+/* https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Future.html
+ * 
+ * */
+
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,8 +25,6 @@ public class Handler {
 //				+ "\"two\":[{\"host\":\"srvdbslis9-test\"," + "    \"port\":\"7427\","
 //				+ "    \"dbName\":\"DWM\",\"conector\":\"MSSQL\"" + "  },{\"query\":\"SELECT 2 * from table\"}]}";
 
-		//Pequeño comentario 22
-
 		JsonParser parser = new JsonParser();
 
 		JsonObject elem = parser.parse(new FileReader(
@@ -30,16 +32,27 @@ public class Handler {
 		
 		List<DBConnector> conectores = new ArrayList<>();
 		for (Entry<String, JsonElement> obj : elem.entrySet()) {
-			System.out.println(obj.getKey());
+//			System.out.println(obj.getKey());
 			JsonObject dbconn = obj.getValue().getAsJsonArray().get(0).getAsJsonObject();
 
 			conectores.add(new DBConnector(dbconn.get("host").getAsString()
 											, dbconn.get("port").getAsString()
 											, dbconn.get("conector").getAsString()));
 		}
-		System.out.println(conectores.get(1).conector);
+		//System.out.println(conectores.get(1).conector);
 		
-//		ExecutorService exec = Executors.newCachedThreadPool();
+		ExecutorService execute = Executors.newCachedThreadPool();
+		
+		Future <?> future = execute.submit(conectores.get(0));
+		
+		try {
+			System.out.println(future.get());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			System.out.println(e);
+		}
 //
 //		@SuppressWarnings("unchecked")
 //		Future <DBConnector> promesa = exec.submit() ;
